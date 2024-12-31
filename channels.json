@@ -1,0 +1,33 @@
+{
+    "youtubeChannels": [
+        {
+            "id": "UCSFMCn1xtj_4kOy6KNK_fNg",
+            "name": "wearethevr"
+        },
+        {
+            "id": "UC1R3yteq3HoSUIHQ7hp65XQ",
+            "name": "NessajGaming"
+        },
+        {
+            "id": "UCcSAt9uIqRHK8dEV2wVY1dQ",
+            "name": "Nessaj"
+        }
+    ],
+    "twitchChannels": [
+        {
+            "name": "DesperateNasus"
+        },
+        {
+            "name": "KeshaEuw"
+        },
+        {
+            "name": "Fyrexxx"
+        },
+        {
+            "name": "WeAreTheVR"
+        },
+        {
+            "name": "TsBlackii"
+        }
+    ]
+}
