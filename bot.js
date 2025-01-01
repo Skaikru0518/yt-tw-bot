@@ -4,6 +4,17 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 const channels = require('./channels.json');
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+    res.send('Bot is running!');
+});
+
+app.listen(3000, () => {
+    console.log('Web server is running on port 3000');
+});
+
 
 // Basic Bot Setup
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
