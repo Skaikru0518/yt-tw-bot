@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
+const { EmbedBuilder } = require('@discordjs/builders'); // Add this line
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
@@ -169,7 +170,7 @@ const commandFolders = fs.readdirSync(foldersPath);
 
 const commands = [];
 for (const folder of commandFolders) {
-    const commandsPath = path.join(foldersPath, folder);
+    const commandsPath = path.join(commandsPath, folder);
     const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
     for (const file of commandFiles) {
         const filePath = path.join(commandsPath, file);
