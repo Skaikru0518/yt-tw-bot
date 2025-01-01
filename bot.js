@@ -93,7 +93,7 @@ async function checkTwitch(channelName) {
                 .setColor(0xff0000) // YouTube Red
                 .setAuthor({ name: 'YouTube', iconURL: YOUTUBE_ICON_URL })
                 .setTitle(`New video from ${video.snippet.channelTitle}`)
-                .setDescription(`**Title:** ${video.snippet.title}\n**Description:** ${video.snippet.description}\n**Published at:** ${new Date(video.snippet.publishedAt).toLocaleString()}`)
+                .setDescription(`${channelName} **went live**\n**Title:** ${video.snippet.title}\n**Description:** ${video.snippet.description}\n**Published at:** ${new Date(video.snippet.publishedAt).toLocaleString()}`)
                 .setURL(`https://www.youtube.com/watch?v=${video.id.videoId}`)
                 .setThumbnail(video.snippet.thumbnails.default.url);
             return { embeds: [embed] };

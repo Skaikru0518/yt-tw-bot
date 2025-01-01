@@ -59,7 +59,7 @@ async function checkTwitch(channelName) {
             .setColor(0x9146ff) // Twitch Purple
             .setAuthor({ name: 'Twitch', iconURL: TWITCH_ICON_URL })
             .setTitle(`Live now on Twitch!`)
-            .setDescription(`**Title:** ${stream.title}\n**Game:** ${stream.game_name}\n**Started at:** ${new Date(stream.started_at).toLocaleString()}\n[Watch Now](https://www.twitch.tv/${channelName})`)
+            .setDescription(`${channelName} **went live**\n**Title:** ${stream.title}\n**Game:** ${stream.game_name}\n**Started at:** ${new Date(stream.started_at).toLocaleString()}\n[Watch Now](https://www.twitch.tv/${channelName})`)
             .setURL(`https://www.twitch.tv/${channelName}`)
             .setThumbnail(thumbnailUrl);
         return { embeds: [embed] };
