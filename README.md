@@ -52,7 +52,15 @@ The bot uses the YouTube Data API and Twitch API to fetch content and posts upda
       ],
     }    
 
-4. Run with
+4. Generate a config.json file:
+      ```json
+      {
+          "clientId": "",
+          "guildId": "",
+          "token": ""
+      }
+
+5. Run with
       ```bash
       node bot.js
 
@@ -75,6 +83,7 @@ The bot uses the YouTube Data API and Twitch API to fetch content and posts upda
       │   ├── checknow.js     # Check YouTube/Twitch manually
       │   ├── managechannels/ # Commands for managing channels
       ├── channels.json       # List of YouTube and Twitch channels to track
+      ├── config.json         # Discord server and channel config
       ├── .env                # Environment variables
       ├── package.json        # Node.js dependencies and scripts
 
