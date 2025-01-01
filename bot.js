@@ -44,14 +44,13 @@ async function checkYoutube(channelID) {
         if (video && video.id.videoId !== lastNotified.youtube[channelID]) {
             lastNotified.youtube[channelID] = video.id.videoId;
 
-            const embed = {
-                color: 0xff0000, // YouTube Red
-                author: { name: 'YouTube', icon_url: YOUTUBE_ICON_URL },
-                title: `New video from ${video.snippet.channelTitle}`,
-                description: `**Title:** ${video.snippet.title}\n**Description:** ${video.snippet.description}\n**Published at:** ${new Date(video.snippet.publishedAt).toLocaleString()}`,
-                url: `https://www.youtube.com/watch?v=${video.id.videoId}`,
-                thumbnail: { url: video.snippet.thumbnails.default.url },
-            };
+            const embed = new EmbedBuilder()
+                .setColor(0xff0000) // YouTube Red
+                .setAuthor({ name: 'YouTube', iconURL: YOUTUBE_ICON_URL })
+                .setTitle(`New video from ${video.snippet.channelTitle}`)
+                .setDescription(`**Title:** ${video.snippet.title}\n**Description:** ${video.snippet.description}\n**Published at:** ${new Date(video.snippet.publishedAt).toLocaleString()}`)
+                .setURL(`https://www.youtube.com/watch?v=${video.id.videoId}`)
+                .setThumbnail(video.snippet.thumbnails.default.url);
             return { embeds: [embed] };
         }
     } catch (error) {
@@ -90,17 +89,34 @@ async function checkTwitch(channelName) {
 
             const thumbnailUrl = stream.thumbnail_url.replace('{width}', '320').replace('{height}', '180');
             const embed = new EmbedBuilder()
-                .setColor(0xff0000) // YouTube Red
-                .setAuthor({ name: 'YouTube', iconURL: YOUTUBE_ICON_URL })
-                .setTitle(`New video from ${video.snippet.channelTitle}`)
-                .setDescription(`${channelName} **went live**\n**Title:** ${video.snippet.title}\n**Description:** ${video.snippet.description}\n**Published at:** ${new Date(video.snippet.publishedAt).toLocaleString()}`)
-                .setURL(`https://www.youtube.com/watch?v=${video.id.videoId}`)
-                .setThumbnail(video.snippet.thumbnails.default.url);
+                .setColor(0x9146ff) // Twitch Purple
+                .setAuthor({ name: 'Twitch', iconURL: TWITCH_ICON_URL })
+                .setTitle(`Live now on Twitch!`)
+                .setDescription(`**${channelName}** **went live**\n\n**Title:** ${stream.title}\n**Game:** ${stream.game_name}\n**Started at:** ${new Date(stream.started_at).toLocaleString()}\n[Watch Now](https://www.twitch.tv/${channelName})`)
+                .setURL(`https://www.twitch.tv/${channelName}`)
+                .setThumbnail(thumbnailUrl);
             return { embeds: [embed] };
         }
     } catch (error) {
         console.error(`Error fetching Twitch streams for channel ${channelName}:`, error.message);
         return null;
+    }
+}
+
+// Function to check and post new content
+async function checkAndPostContent(channel) {
+    try {
+        for (const ytChannel of channels.youtubeChannels) {
+            const youtubeMessage = await checkYoutube(ytChannel.id);
+            if (youtubeMessage) await channel.send(youtubeMessage);
+        }
+        for (const twitchChannel of channels.twitchChannels) {
+            const twitchMessage = await checkTwitch(twitchChannel.name);
+            if (twitchMessage) await channel.send(twitchMessage);
+        }
+        console.log('Checked and posted new content.');
+    } catch (error) {
+        console.error('Error during content check:', error.message);
     }
 }
 
@@ -117,14 +133,7 @@ client.once('ready', async () => {
         // Poll APIs every 15 minutes
         setInterval(async () => {
             try {
-                for (const ytChannel of channels.youtubeChannels) {
-                    const youtubeMessage = await checkYoutube(ytChannel.id);
-                    if (youtubeMessage) await channel.send(youtubeMessage);
-                }
-                for (const twitchChannel of channels.twitchChannels) {
-                    const twitchMessage = await checkTwitch(twitchChannel.name);
-                    if (twitchMessage) await channel.send(twitchMessage);
-                }
+                await checkAndPostContent(channel);
             } catch (error) {
                 console.error('Error during API polling:', error.message);
             }

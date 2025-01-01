@@ -59,7 +59,7 @@ async function checkTwitch(channelName) {
             .setColor(0x9146ff) // Twitch Purple
             .setAuthor({ name: 'Twitch', iconURL: TWITCH_ICON_URL })
             .setTitle(`Live now on Twitch!`)
-            .setDescription(`${channelName} **went live**\n**Title:** ${stream.title}\n**Game:** ${stream.game_name}\n**Started at:** ${new Date(stream.started_at).toLocaleString()}\n[Watch Now](https://www.twitch.tv/${channelName})`)
+            .setDescription(`**${channelName}** **went live**\n\n**Title:** ${stream.title}\n**Game:** ${stream.game_name}\n**Started at:** ${new Date(stream.started_at).toLocaleString()}\n[Watch Now](https://www.twitch.tv/${channelName})`)
             .setURL(`https://www.twitch.tv/${channelName}`)
             .setThumbnail(thumbnailUrl);
         return { embeds: [embed] };
@@ -76,16 +76,27 @@ module.exports = {
         const channel = interaction.channel;
 
         try {
+            let hasContent = false;
             for (const ytChannel of channels.youtubeChannels) {
                 const youtubeMessage = await checkYoutube(ytChannel.id);
-                if (youtubeMessage) await channel.send(youtubeMessage);
+                if (youtubeMessage) {
+                    await channel.send(youtubeMessage);
+                    hasContent = true;
+                }
             }
             for (const twitchChannel of channels.twitchChannels) {
                 const twitchMessage = await checkTwitch(twitchChannel.name);
-                if (twitchMessage) await channel.send(twitchMessage);
+                if (twitchMessage) {
+                    await channel.send(twitchMessage);
+                    hasContent = true;
+                }
+            }
+            if (hasContent) {
+                await interaction.editReply('Checked and posted new YouTube videos and Twitch streams.');
+            } else {
+                await interaction.editReply('No new content found.');
             }
             console.log('Checked and posted new content.');
-            await interaction.editReply('Checked and posted new YouTube videos and Twitch streams.');
         } catch (error) {
             console.error('Error during instant check:', error.message);
             await interaction.editReply(`There was an error while checking for new content: ${error.message}`);
